@@ -3,9 +3,11 @@
 
     <string name="app_name">AccelGraph</string>
     <string name="initial_value_text">0</string>
-    <string name="rate_label">Rate</string>
-    <string name="x_label">X</string>
-    <string name="y_label">Y</string>
-    <string name="z_label">Z</string>
+    <string name="sensor_name_label">Accelerometer</string>
+    <string name="rate_label">rate</string>
+    <string name="accuracy_label">accuracy</string>
+    <string name="x_label">X-axis</string>
+    <string name="y_label">Y-axis</string>
+    <string name="z_label">Z-axis</string>
 
 </resources>

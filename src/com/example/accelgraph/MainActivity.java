@@ -17,14 +17,20 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     private final static String TAG = "MainActivity";
 
+    private TextView rateView, accuracyView;
+    private GraphView xView, yView, zView;
+
     private SensorManager sensorMgr;
     private Sensor accelerometer;
 
-    private TextView rateView;
-    private GraphView xView, yView, zView;
+    private final static long GRAPH_REFRESH_WAIT_MS = 20;
+
+    private GraphRefreshThread th = null;
+    private Handler handler;
 
     private float vx, vy, vz;
     private float rate;
+    private int accuracy;
     private long prevTs;
 
     @Override
@@ -34,6 +40,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_main);
 
         rateView = (TextView) findViewById(R.id.rate_view);
+        accuracyView = (TextView) findViewById(R.id.accuracy_view);
         xView = (GraphView) findViewById(R.id.x_view);
         yView = (GraphView) findViewById(R.id.y_view);
         zView = (GraphView) findViewById(R.id.z_view);
@@ -42,15 +49,19 @@ public class MainActivity extends Activity implements SensorEventListener {
         accelerometer = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometer == null) {
             Toast.makeText(this, "No acceleromter available", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
+
+        handler = new Handler();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-        sensorMgr.registerListener(this, accelerometer, 10 * 1000);
-        th = new DisplayThread();
+        sensorMgr.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+        th = new GraphRefreshThread();
         th.start();
     }
 
@@ -74,21 +85,17 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         Log.i(TAG, "onAccuracyChanged: ");
+        this.accuracy = accuracy;
     }
 
-    Handler handler = new Handler();
-
-    private DisplayThread th = null;
-    
-    private final static long DISPLAY_RATE = 50;
-
-    private class DisplayThread extends Thread {
+    private class GraphRefreshThread extends Thread {
         public void run() {
             try {
                 while (th != null) {
                     handler.post(new Runnable() {
                         public void run() {
                             rateView.setText(Float.toString(rate));
+                            accuracyView.setText(Integer.toString(accuracy));
                             xView.setVal(vx);
                             yView.setVal(vy);
                             zView.setVal(vz);
@@ -97,10 +104,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                             zView.invalidate();
                         }
                     });
-                    Thread.sleep(DISPLAY_RATE);
+                    Thread.sleep(GRAPH_REFRESH_WAIT_MS);
                 }
             }
-            catch (InterruptedException e) {}
+            catch (InterruptedException e) {
+                th = null;
+            }
         }
     }
 

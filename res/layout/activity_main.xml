@@ -18,17 +18,38 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/horizontal_margin"
-            android:text="@string/rate_label"
+            android:layout_marginRight="@dimen/horizontal_margin2"
+            android:text="@string/sensor_name_label"
             android:textSize="@dimen/large_text_size" />
 
         <TextView
-            android:id="@+id/rate_view"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginRight="@dimen/horizontal_margin"
+            android:text="@string/rate_label"
+            android:textSize="@dimen/small_text_size" />
+
+        <TextView
+            android:id="@+id/rate_view"
+            android:layout_width="@dimen/data_view_width"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_margin"
             android:text="@string/initial_value_text"
-            android:textSize="@dimen/large_text_size" />
+            android:textSize="@dimen/small_text_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/horizontal_margin"
+            android:text="@string/accuracy_label"
+            android:textSize="@dimen/small_text_size" />
+
+        <TextView
+            android:id="@+id/accuracy_view"
+            android:layout_width="@dimen/data_view_width"
+            android:layout_height="wrap_content"
+            android:text="@string/initial_value_text"
+            android:textSize="@dimen/small_text_size" />
     </LinearLayout>
 
     <TextView
